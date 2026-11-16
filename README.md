@@ -17,6 +17,3 @@ Os notebooks abrem e rodam no próprio navegador (JupyterLite): não precisa de 
 - O que você muda fica salvo só neste navegador. Para levar o notebook: **File › Download**.
 - Os mesmos arquivos `.ipynb` também abrem no Google Colab e no Jupyter instalado.
 
-## Para o professor
-
-O site é montado sozinho pelo GitHub Actions a cada alteração (cerca de 3 minutos). Para trocar um notebook, envie o arquivo novo com o mesmo nome em *Add file › Upload files*.
