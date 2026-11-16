@@ -1,0 +1,46 @@
+# Monta o site JupyterLite com os notebooks (.ipynb) da raiz do repositório e publica no GitHub Pages.
+# Roda sozinho a cada alteração; para trocar um notebook, basta enviar o arquivo novo com o mesmo nome.
+name: Publica o site da oficina
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Instala o JupyterLite
+        run: pip install -r requirements.txt
+      - name: Monta o site
+        run: |
+          mkdir -p conteudo
+          cp *.ipynb conteudo/ 2>/dev/null || echo "Ainda sem notebooks na raiz do repositório."
+          jupyter lite build --contents conteudo --output-dir site
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
